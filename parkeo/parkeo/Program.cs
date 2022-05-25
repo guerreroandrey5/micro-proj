@@ -23,16 +23,31 @@ namespace Micro_Proyecto
         }
         static void park()
         {
-            string[,] parkinglot = new string[50, 10];
+            string[,] parkinglot = new string[10, 5];
+            string[] letras = { "A", "B", "C", "D", "E" };
+            for (int f = 0; f < 10; f ++)
+            {
+                for (int c = 0; c < 5; c++)
+                {
+                    string linea;
+                    linea = letras[c] + (f);
+                    parkinglot[f, c] = (linea);
+                }
+            }
             print(parkinglot);
-            //Console.WriteLine(parkinglot);
         }
         static void print(string[,] park)
         {
-            Console.WriteLine("<=======================>");
-            foreach (var val in park)
             {
-                Console.WriteLine(val);
+                for (int f = 0; f < 10; f++)
+                {
+                    for (int c = 0; c < 5; c++)
+                    {
+                        Console.Write(park[f, c] + "  ");
+                    }
+                    Console.WriteLine();
+                }
+                Console.ReadKey();
             }
         }
     }
