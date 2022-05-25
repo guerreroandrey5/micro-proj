@@ -16,6 +16,7 @@ namespace Micro_Proyecto
             {
                 case 1:
                     park();
+                    //wapo
                     break;
                 default:
                     break;
