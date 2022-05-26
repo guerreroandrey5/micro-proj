@@ -11,14 +11,16 @@ namespace Micro_Proyecto
         static string[,][] data = new string[10, 5][];
         static string[,] parkinglot = new string[10, 5];
         static string[] reservados = new string[15];
-        //static string[] ocupados = new string[15];
+        static int[] ganancias = new int[3];
 
         static void Main(string[] args)
+
         {
             park();
             while (true)
             {
                 
+
                 Console.WriteLine("<------------------------------------------->");
                 Console.WriteLine("|         Parqueo el Buen Espacio           |");
                 Console.WriteLine("<------------------------------------------->");
@@ -33,6 +35,9 @@ namespace Micro_Proyecto
                 {
                     case 1:
                         registrar();
+                        break;
+                    case 2:
+                        cobrar();
                         break;
                     default:
                         break;
@@ -168,16 +173,30 @@ namespace Micro_Proyecto
         static int comprobar(string[,] matriz, string dato)
         {
             int f = -1;
-            
-            foreach (string item in matriz)
+            foreach (var item in matriz)
             {
                 f++;
                 if (item.TrimEnd(' ').Equals(dato))
                 {
-                    int index = f;
-                    return index;
+                    return f;
                 }
                
+            }
+
+
+            return -1;
+        }
+
+        static int comprobarData(string[,][] matriz, string dato)
+        {
+            int f = -1;
+            foreach (var item in matriz)
+            {
+                f++;
+                if (item != null && item[0].TrimEnd(' ').Equals(dato))
+                {
+                    return f;
+                }
             }
 
 
@@ -190,6 +209,84 @@ namespace Micro_Proyecto
             Console.Write(park + "  ");
      
           
+        }
+
+        static void cobrar()
+        {
+            Console.WriteLine("Digite la placa del Vehiculo:");
+            string placa = Console.ReadLine();
+            string date = "";
+            int pago = 0;
+            int[] indice = null;
+            bool lavado = false;
+            DateTime now = DateTime.Now;
+            TimeSpan hours;
+            int exts = comprobarData(data, placa);
+            if (exts != -1)
+            {
+                indice = getIndex(exts);
+                date = data[indice[0], indice[1]][1];
+                hours = now - DateTime.Parse(date);
+                pago = calcularPago(hours);
+            }
+            while(true)
+            {
+                Console.WriteLine("Por favor indique si se uso el servicio de lavado\n1-Si\n2-No");
+                int select = int.Parse(Console.ReadLine());
+                if (select > 2)
+                {
+                    Console.WriteLine();
+                    print("Seleccion invalidad",ConsoleColor.Red);
+                    print("", ConsoleColor.White);
+                } else if (select == 2)
+                {
+                    break;
+                } else if (select == 1)
+                {
+                    ganancias[2] += 5000;
+                    lavado = true;
+                    pago += 5000;
+                    break;
+                }
+            }
+            MostarRecibo(date, now, parkinglot[indice[0], indice[1]], pago, lavado);
+        }
+
+        static void MostarRecibo(string entrada, DateTime salida, string espacio, int total, bool serviciol)
+        {
+            Console.WriteLine();
+            Console.WriteLine("<---------------------------------------------------------->");
+            Console.WriteLine("|                                                          |");
+            Console.WriteLine("|    Muchas gracias por venir al Parqueo el Buen Espacio!  |");
+            Console.WriteLine("|                                                          |");
+            Console.WriteLine("<---------------------------------------------------------->");
+            Console.WriteLine("|  Espacio Utilizado:                                   {0}|", espacio);
+            Console.WriteLine("|  Hora de Entrada:                                {0}|", entrada);
+            Console.WriteLine("|  Hora de Salida:                                 {0}|", salida);
+            Console.WriteLine("|  Servicio de Lavado:                                  {0}|", serviciol);
+            Console.WriteLine("|                                                          |");
+            Console.WriteLine("|  Total a Pagar:                                      {0}|", total);
+            Console.WriteLine("<---------------------------------------------------------->");
+        }
+     
+
+        static int calcularPago(TimeSpan tiempo)
+        {
+            int pago = 0;
+            int horas = tiempo.Hours;
+            if (horas == 0)
+            {
+                horas = 1;
+            }
+
+            Console.WriteLine(horas);
+            while (horas != 0)
+            {
+                pago += 500;
+                horas--;
+            }
+            ganancias[1] += pago;
+            return pago;
         }
     }
 }
